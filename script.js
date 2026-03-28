@@ -146,7 +146,6 @@ async function renderResponses() {
     tableWrap.hidden = true;
     toggleResponsesDownloadButton(false);
     responsesList.innerHTML = '';
-    emptyState.textContent = 'Responses could not be loaded. Start the Python backend server to view saved feedback.';
   }
 }
 
