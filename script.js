@@ -1,5 +1,6 @@
 let selectedRating = 0;
 const responsesApiUrl = '/api/responses';
+let responsesCache = [];
 
 initResponsesLoginPage();
 
@@ -94,6 +95,7 @@ async function renderResponses() {
   const responsesList = document.getElementById('responses-list');
   const emptyState = document.getElementById('responses-empty');
   const tableWrap = document.getElementById('responses-table-wrap');
+  const downloadButton = document.getElementById('responses-download');
 
   if (!responsesList || !emptyState || !tableWrap) {
     return;
@@ -111,10 +113,12 @@ async function renderResponses() {
     }
 
     const responses = await response.json();
+    responsesCache = Array.isArray(responses) ? responses : [];
 
     if (!Array.isArray(responses) || !responses.length) {
       emptyState.hidden = false;
       tableWrap.hidden = true;
+      toggleResponsesDownloadButton(false);
       responsesList.innerHTML = '';
       emptyState.textContent = 'No responses have been saved yet. Submit feedback from the Feedback page to populate this list.';
       return;
@@ -122,6 +126,7 @@ async function renderResponses() {
 
     emptyState.hidden = true;
     tableWrap.hidden = false;
+    toggleResponsesDownloadButton(Boolean(downloadButton));
     responsesList.innerHTML = responses
       .map((responseItem) => {
         const submittedDate = formatResponseDate(responseItem.submittedAt);
@@ -136,8 +141,10 @@ async function renderResponses() {
       })
       .join('');
   } catch (error) {
+    responsesCache = [];
     emptyState.hidden = false;
     tableWrap.hidden = true;
+    toggleResponsesDownloadButton(false);
     responsesList.innerHTML = '';
     emptyState.textContent = 'Responses could not be loaded. Start the Python backend server to view saved feedback.';
   }
@@ -167,6 +174,11 @@ function escapeHtml(value) {
 }
 
 renderResponses();
+
+const responsesDownloadButton = document.getElementById('responses-download');
+if (responsesDownloadButton) {
+  responsesDownloadButton.addEventListener('click', downloadResponsesCsv);
+}
 
 function showFeedbackStatus(message, isError) {
   const successMessage = document.getElementById('success-msg');
@@ -199,4 +211,50 @@ function initResponsesLoginPage() {
 
   const params = new URLSearchParams(window.location.search);
   loginError.hidden = params.get('error') !== '1';
+}
+
+function toggleResponsesDownloadButton(isEnabled) {
+  const downloadButton = document.getElementById('responses-download');
+
+  if (!downloadButton) {
+    return;
+  }
+
+  downloadButton.disabled = !isEnabled;
+}
+
+function downloadResponsesCsv() {
+  if (!responsesCache.length) {
+    return;
+  }
+
+  const headers = ['Name', 'Email', 'App', 'Type', 'Rating', 'Message', 'Submitted At'];
+  const rows = responsesCache.map((item) => [
+    item.name || '',
+    item.email || '',
+    item.app || '',
+    item.feedbackType || '',
+    item.rating || '',
+    item.message || '',
+    item.submittedAt || '',
+  ]);
+  const csvContent = [headers, ...rows]
+    .map((row) => row.map(escapeCsvValue).join(','))
+    .join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const fileUrl = URL.createObjectURL(blob);
+  const downloadLink = document.createElement('a');
+  const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+
+  downloadLink.href = fileUrl;
+  downloadLink.download = `focus-ai-responses-${timestamp}.csv`;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+  URL.revokeObjectURL(fileUrl);
+}
+
+function escapeCsvValue(value) {
+  const escapedValue = String(value).replace(/"/g, '""');
+  return `"${escapedValue}"`;
 }

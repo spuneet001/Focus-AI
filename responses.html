@@ -27,7 +27,10 @@
       <div class="section-title" style="text-align:center">Saved user responses</div>
       <div class="section-sub" style="text-align:center;margin:0 auto">This page shows protected feedback saved from the site.</div>
     </div>
-    <form class="responses-toolbar" action="/responses-logout" method="POST"><button class="btn-secondary responses-logout" type="submit">Log Out</button></form>
+    <div class="responses-toolbar">
+      <button class="btn-secondary responses-download" id="responses-download" type="button">Download CSV</button>
+      <form action="/responses-logout" method="POST"><button class="btn-secondary responses-logout" type="submit">Log Out</button></form>
+    </div>
     <div class="responses-empty" id="responses-empty">No responses have been saved yet. Submit feedback from the Feedback page to populate this table.</div>
     <div class="responses-table-wrap" id="responses-table-wrap">
       <table class="responses-table" aria-label="Saved user responses">

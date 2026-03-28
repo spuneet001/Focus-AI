@@ -4,7 +4,6 @@ import json
 import os
 import secrets
 import sqlite3
-import time
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs
@@ -37,9 +36,8 @@ HOST = os.environ.get('HOST', '0.0.0.0')
 PORT = int(os.environ.get('PORT', '4173'))
 RESPONSES_PASSWORD = os.environ.get('FOCUS_AI_RESPONSES_PASSWORD')
 RESPONSES_SESSION_COOKIE = 'focus_ai_responses_auth'
-RESPONSES_SESSION_TTL_SECONDS = 15 * 60
 SECURE_COOKIES = os.environ.get('FOCUS_AI_SECURE_COOKIES', '0') == '1'
-ACTIVE_SESSIONS: dict[str, float] = {}
+ACTIVE_SESSIONS: set[str] = set()
 
 
 def load_responses() -> list[dict]:
@@ -175,14 +173,16 @@ def store_response(response: dict) -> None:
         )
 
 
-def build_session_cookie(value: str, max_age: int) -> str:
+def build_session_cookie(value: str, max_age: int | None = None) -> str:
     parts = [
         f'{RESPONSES_SESSION_COOKIE}={value}',
-        f'Max-Age={max_age}',
         'HttpOnly',
         'Path=/',
         'SameSite=Lax',
     ]
+
+    if max_age is not None:
+        parts.insert(1, f'Max-Age={max_age}')
 
     if SECURE_COOKIES:
         parts.append('Secure')
@@ -262,17 +262,17 @@ class FocusAIHandler(SimpleHTTPRequestHandler):
             return
 
         session_token = secrets.token_urlsafe(24)
-        ACTIVE_SESSIONS[session_token] = time.time() + RESPONSES_SESSION_TTL_SECONDS
+        ACTIVE_SESSIONS.add(session_token)
 
         self.send_response(303)
         self.send_header('Location', '/responses.html')
-        self.send_header('Set-Cookie', build_session_cookie(session_token, RESPONSES_SESSION_TTL_SECONDS))
+        self.send_header('Set-Cookie', build_session_cookie(session_token))
         self.end_headers()
 
     def _handle_logout(self) -> None:
         session_token = self._get_session_token()
         if session_token:
-            ACTIVE_SESSIONS.pop(session_token, None)
+            ACTIVE_SESSIONS.discard(session_token)
 
         self.send_response(303)
         self.send_header('Location', '/responses-login.html')
@@ -280,19 +280,12 @@ class FocusAIHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def _is_authenticated(self) -> bool:
-        self._cleanup_expired_sessions()
         session_token = self._get_session_token()
 
         if not session_token:
             return False
 
-        expiry = ACTIVE_SESSIONS.get(session_token)
-        if expiry is None or expiry <= time.time():
-            ACTIVE_SESSIONS.pop(session_token, None)
-            return False
-
-        ACTIVE_SESSIONS[session_token] = time.time() + RESPONSES_SESSION_TTL_SECONDS
-        return True
+        return session_token in ACTIVE_SESSIONS
 
     def _get_session_token(self) -> str | None:
         cookie_header = self.headers.get('Cookie', '')
@@ -304,13 +297,6 @@ class FocusAIHandler(SimpleHTTPRequestHandler):
                 return value
 
         return None
-
-    def _cleanup_expired_sessions(self) -> None:
-        now = time.time()
-        expired_tokens = [token for token, expiry in ACTIVE_SESSIONS.items() if expiry <= now]
-
-        for token in expired_tokens:
-            ACTIVE_SESSIONS.pop(token, None)
 
     def _redirect(self, location: str) -> None:
         self.send_response(303)
@@ -335,6 +321,6 @@ if __name__ == '__main__':
     server = ThreadingHTTPServer((HOST, PORT), FocusAIHandler)
     print(f'Serving Focus-AI on http://{HOST}:{PORT}')
     print('Responses password protected at /responses.html')
-    print('Responses login session expires after 15 minutes')
+    print('Responses login session stays active until logout or server restart')
     print(f'Using SQLite database at {RESPONSES_DB_PATH}')
     server.serve_forever()
