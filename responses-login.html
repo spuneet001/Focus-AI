@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Responses Login — Focus-AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./styles.css"/>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="./index.html">Focus<span>AI</span></a>
+  <ul class="nav-links">
+    <li><a href="./index.html">Home</a></li>
+    <li><a href="./apps.html">Apps</a></li>
+    <li><a href="./developer.html">Developer</a></li>
+    <li><a href="./about.html">About</a></li>
+    <li><a href="./feedback.html">Feedback</a></li>
+  </ul>
+  <a class="nav-cta" href="./feedback.html">Get in Touch</a>
+</nav>
+
+<main class="page">
+  <div class="responses-login-wrap">
+    <div class="responses-login-card">
+      <div class="section-tag" style="display:flex;justify-content:center">Protected</div>
+      <div class="section-title" style="text-align:center">Responses access</div>
+      <div class="section-sub" style="text-align:center;margin:0 auto 28px">Enter the password to view saved responses.</div>
+      <form class="responses-login-form" action="/responses-login" method="POST">
+        <label for="responses-password">Password</label>
+        <input id="responses-password" name="password" type="password" placeholder="Enter password" required/>
+        <button class="submit-btn" type="submit">Open Responses</button>
+      </form>
+      <p class="responses-login-error" id="responses-login-error" hidden>Incorrect password. Try again.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div><div class="footer-brand-name">Focus<span>AI</span></div><div class="footer-desc">Building AI-powered apps that help people focus, plan, and achieve their goals. Made with care in Delhi, India.</div></div>
+  <div><div class="footer-col-title">Pages</div><ul class="footer-links"><li><a href="./index.html">Home</a></li><li><a href="./apps.html">Apps</a></li><li><a href="./developer.html">Developer</a></li><li><a href="./about.html">About</a></li><li><a href="./feedback.html">Feedback</a></li><li><a href="./responses.html">Responses</a></li></ul></div>
+  <div><div class="footer-col-title">Apps</div><ul class="footer-links"><li><a href="./apps.html">FocAI</a></li><li><a href="./feedback.html">Coming Soon</a></li></ul></div>
+</footer>
+<div class="footer-bottom"><div class="footer-copy">© 2026 Focus-AI · All rights reserved · Built by Puneet Sharma</div><div class="footer-copy">Made with ❤️ in Delhi, India</div></div>
+<script src="./script.js"></script>
+</body>
+</html>

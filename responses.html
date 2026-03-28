@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Responses — Focus-AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./styles.css"/>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="./index.html">Focus<span>AI</span></a>
+  <ul class="nav-links">
+    <li><a href="./index.html">Home</a></li>
+    <li><a href="./apps.html">Apps</a></li>
+    <li><a href="./developer.html">Developer</a></li>
+    <li><a href="./about.html">About</a></li>
+    <li><a href="./feedback.html">Feedback</a></li>
+  </ul>
+  <a class="nav-cta" href="./feedback.html">Get in Touch</a>
+</nav>
+
+<main class="page">
+  <div class="responses-wrap">
+    <div class="responses-header">
+      <div class="section-tag" style="display:flex;justify-content:center">Responses</div>
+      <div class="section-title" style="text-align:center">Saved user responses</div>
+      <div class="section-sub" style="text-align:center;margin:0 auto">This page shows protected feedback saved from the site.</div>
+    </div>
+    <form class="responses-toolbar" action="/responses-logout" method="POST"><button class="btn-secondary responses-logout" type="submit">Log Out</button></form>
+    <div class="responses-empty" id="responses-empty">No responses have been saved yet. Submit feedback from the Feedback page to populate this table.</div>
+    <div class="responses-table-wrap" id="responses-table-wrap">
+      <table class="responses-table" aria-label="Saved user responses">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>App</th>
+            <th>Type</th>
+            <th>Rating</th>
+            <th>Message</th>
+            <th>Submitted</th>
+          </tr>
+        </thead>
+        <tbody id="responses-list"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div><div class="footer-brand-name">Focus<span>AI</span></div><div class="footer-desc">Building AI-powered apps that help people focus, plan, and achieve their goals. Made with care in Delhi, India.</div></div>
+  <div><div class="footer-col-title">Pages</div><ul class="footer-links"><li><a href="./index.html">Home</a></li><li><a href="./apps.html">Apps</a></li><li><a href="./developer.html">Developer</a></li><li><a href="./about.html">About</a></li><li><a href="./feedback.html">Feedback</a></li><li><a href="./responses.html">Responses</a></li></ul></div>
+  <div><div class="footer-col-title">Apps</div><ul class="footer-links"><li><a href="./apps.html">FocAI</a></li><li><a href="./feedback.html">Coming Soon</a></li></ul></div>
+</footer>
+<div class="footer-bottom"><div class="footer-copy">© 2026 Focus-AI · All rights reserved · Built by Puneet Sharma</div><div class="footer-copy">Made with ❤️ in Delhi, India</div></div>
+<script src="./script.js"></script>
+</body>
+</html>
