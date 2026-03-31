@@ -1,0 +1,60 @@
+Privacy Policy
+==============
+
+This is the Privacy Policy for Focus AI. Please read the following information to understand how we handle your data.
+
+# Privacy Policy for FocAI
+
+Effective Date: March 31, 2026
+
+FocAI ("we", "us", or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile and web applications (the "Service").
+
+## 1. Information We Collect
+
+**a. Personal Information:**
+- Name, email address, username, and profile picture (if provided)
+- Payment and subscription information (handled securely via RevenueCat and Stripe)
+
+**b. Usage Data:**
+- Task, group, and activity data you create or interact with
+- Device information (such as device type, OS, and app version)
+- Log and usage analytics (for improving the Service)
+
+**c. Cookies & Local Storage:**
+- We use cookies and local storage to maintain your session and preferences
+
+## 2. How We Use Your Information
+- To provide, operate, and maintain the Service
+- To process subscriptions and payments
+- To send notifications and reminders (with your permission)
+- To generate reports and analytics for your productivity
+- To improve and personalize your experience
+- To communicate with you about updates, support, or marketing (with your consent)
+
+## 3. How We Share Your Information
+- With trusted third-party services (e.g., RevenueCat, Stripe, push notification providers) only as needed to operate the Service
+- With group members (for group tasks and chat)
+- As required by law or to protect rights and safety
+
+## 4. Data Security
+- We use industry-standard security measures to protect your data
+- Passwords are securely hashed; sensitive data is encrypted
+- Payment data is handled by PCI-compliant providers (we do not store your card details)
+
+## 5. Your Rights & Choices
+- You can access, update, or delete your account at any time
+- You can opt out of marketing communications
+- You can request deletion of your data by contacting support
+
+## 6. Children's Privacy
+- FocAI is not intended for children under 13. We do not knowingly collect data from children under 13.
+
+## 7. Changes to This Policy
+- We may update this Privacy Policy from time to time. We will notify you of significant changes via the app or email.
+
+## 8. Contact Us
+If you have any questions or concerns about this Privacy Policy, please contact us at: support@focusflow.world
+
+---
+
+By using FocAI, you agree to this Privacy Policy.
