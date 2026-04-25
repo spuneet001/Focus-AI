@@ -4,7 +4,7 @@ This project is not a static-only site anymore.
 It has a Python backend in `server.py` for:
 
 - saving responses
-- protecting the responses page with a password
+- protecting the admin dashboard with login credentials
 - serving the site
 
 Because of that, do not deploy it to a static host like GitHub Pages.
@@ -22,7 +22,8 @@ Because of that, do not deploy it to a static host like GitHub Pages.
 
 5. Add environment variables:
 
-   - `FOCUS_AI_RESPONSES_PASSWORD=your-real-password`
+   - `FOCUS_AI_ADMIN_USERNAME=your-admin-username`
+   - `FOCUS_AI_ADMIN_PASSWORD=your-real-password`
    - `FOCUS_AI_SECURE_COOKIES=1`
 
 6. Deploy.
@@ -41,7 +42,19 @@ After deployment on Render:
 
 This app now stores responses in SQLite.
 
-By default it uses:
+By default it uses a stable SQLite file path.
+
+On local machines, the default is:
+
+```text
+~/.focus-ai/focus_ai.db
+```
+
+This keeps your data outside the project folder, so normal frontend/backend code changes do not affect your saved responses.
+
+In hosted environments, it uses whatever you set in `FOCUS_AI_DB_PATH`.
+
+Example old in-project location:
 
 ```text
 focus_ai.db
@@ -72,7 +85,10 @@ python3 server.py
 With `.env` containing:
 
 ```env
-FOCUS_AI_RESPONSES_PASSWORD=your-password
+FOCUS_AI_ADMIN_USERNAME=admin
+FOCUS_AI_ADMIN_PASSWORD=your-password
 FOCUS_AI_SECURE_COOKIES=0
-FOCUS_AI_DB_PATH=./focus_ai.db
+FOCUS_AI_DB_PATH=/absolute/path/to/your/stable/focus_ai.db
 ```
+
+`FOCUS_AI_RESPONSES_PASSWORD` is still accepted as a fallback for backward compatibility, but new deployments should use `FOCUS_AI_ADMIN_PASSWORD`.

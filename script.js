@@ -3,6 +3,7 @@ const responsesApiUrl = '/api/responses';
 let responsesCache = [];
 
 initResponsesLoginPage();
+initAdminDashboard();
 
 function selectRating(value) {
   selectedRating = value;
@@ -210,6 +211,33 @@ function initResponsesLoginPage() {
 
   const params = new URLSearchParams(window.location.search);
   loginError.hidden = params.get('error') !== '1';
+}
+
+function initAdminDashboard() {
+  const navItems = document.querySelectorAll('.admin-nav-item');
+  const panels = document.querySelectorAll('.admin-panel');
+
+  if (!navItems.length || !panels.length) {
+    return;
+  }
+
+  navItems.forEach((navItem) => {
+    navItem.addEventListener('click', () => {
+      const panelTarget = navItem.getAttribute('data-panel-target');
+
+      navItems.forEach((item) => {
+        const isActive = item === navItem;
+        item.classList.toggle('active', isActive);
+        item.setAttribute('aria-selected', String(isActive));
+      });
+
+      panels.forEach((panel) => {
+        const isActive = panel.id === panelTarget;
+        panel.classList.toggle('active', isActive);
+        panel.hidden = !isActive;
+      });
+    });
+  });
 }
 
 function toggleResponsesDownloadButton(isEnabled) {

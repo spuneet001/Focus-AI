@@ -31,11 +31,13 @@ def load_dotenv_file() -> None:
 load_dotenv_file()
 
 RESPONSES_JSON_FILE = ROOT_DIR / 'responses-data.json'
-RESPONSES_DB_PATH = Path(os.environ.get('FOCUS_AI_DB_PATH', str(ROOT_DIR / 'focus_ai.db')))
+DEFAULT_LOCAL_DB_PATH = Path.home() / '.focus-ai' / 'focus_ai.db'
+RESPONSES_DB_PATH = Path(os.environ.get('FOCUS_AI_DB_PATH', str(DEFAULT_LOCAL_DB_PATH)))
 HOST = os.environ.get('HOST', '0.0.0.0')
 PORT = int(os.environ.get('PORT', '4173'))
-RESPONSES_PASSWORD = os.environ.get('FOCUS_AI_RESPONSES_PASSWORD')
-RESPONSES_SESSION_COOKIE = 'focus_ai_responses_auth'
+ADMIN_USERNAME = os.environ.get('FOCUS_AI_ADMIN_USERNAME', 'admin').strip() or 'admin'
+ADMIN_PASSWORD = os.environ.get('FOCUS_AI_ADMIN_PASSWORD') or os.environ.get('FOCUS_AI_RESPONSES_PASSWORD')
+RESPONSES_SESSION_COOKIE = 'focus_ai_admin_auth'
 SECURE_COOKIES = os.environ.get('FOCUS_AI_SECURE_COOKIES', '0') == '1'
 ACTIVE_SESSIONS: set[str] = set()
 
@@ -195,11 +197,15 @@ class FocusAIHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=str(ROOT_DIR), **kwargs)
 
     def do_GET(self) -> None:
-        if self.path == '/responses.html' and not self._is_authenticated():
-            self._redirect('/responses-login.html')
+        if self.path.startswith('/responses-login.html'):
+            self._redirect(self._admin_login_path())
             return
 
-        if self.path == '/responses-login.html' and self._is_authenticated():
+        if self.path.startswith('/responses.html') and not self._is_authenticated():
+            self._redirect('/admin-login.html')
+            return
+
+        if self.path.startswith('/admin-login.html') and self._is_authenticated():
             self._redirect('/responses.html')
             return
 
@@ -214,11 +220,11 @@ class FocusAIHandler(SimpleHTTPRequestHandler):
         super().do_GET()
 
     def do_POST(self) -> None:
-        if self.path == '/responses-login':
+        if self.path in {'/admin-login', '/responses-login'}:
             self._handle_login()
             return
 
-        if self.path == '/responses-logout':
+        if self.path in {'/admin-logout', '/responses-logout'}:
             self._handle_logout()
             return
 
@@ -255,10 +261,11 @@ class FocusAIHandler(SimpleHTTPRequestHandler):
         content_length = int(self.headers.get('Content-Length', '0'))
         payload = self.rfile.read(content_length).decode('utf-8')
         form_data = parse_qs(payload)
+        username = form_data.get('username', [''])[0].strip()
         password = form_data.get('password', [''])[0]
 
-        if password != RESPONSES_PASSWORD:
-            self._redirect('/responses-login.html?error=1')
+        if username != ADMIN_USERNAME or password != ADMIN_PASSWORD:
+            self._redirect('/admin-login.html?error=1')
             return
 
         session_token = secrets.token_urlsafe(24)
@@ -275,7 +282,7 @@ class FocusAIHandler(SimpleHTTPRequestHandler):
             ACTIVE_SESSIONS.discard(session_token)
 
         self.send_response(303)
-        self.send_header('Location', '/responses-login.html')
+        self.send_header('Location', '/admin-login.html')
         self.send_header('Set-Cookie', build_session_cookie('', 0))
         self.end_headers()
 
@@ -303,6 +310,10 @@ class FocusAIHandler(SimpleHTTPRequestHandler):
         self.send_header('Location', location)
         self.end_headers()
 
+    def _admin_login_path(self) -> str:
+        query = self.path.partition('?')[2]
+        return f'/admin-login.html?{query}' if query else '/admin-login.html'
+
     def _send_json(self, payload: object, status: int = 200) -> None:
         body = json.dumps(payload, ensure_ascii=True).encode('utf-8')
         self.send_response(status)
@@ -313,14 +324,14 @@ class FocusAIHandler(SimpleHTTPRequestHandler):
 
 
 if __name__ == '__main__':
-    if not RESPONSES_PASSWORD:
-        raise RuntimeError('Set FOCUS_AI_RESPONSES_PASSWORD in the environment or .env before starting the server.')
+    if not ADMIN_PASSWORD:
+        raise RuntimeError('Set FOCUS_AI_ADMIN_PASSWORD in the environment or .env before starting the server.')
 
     initialize_database()
 
     server = ThreadingHTTPServer((HOST, PORT), FocusAIHandler)
     print(f'Serving Focus-AI on http://{HOST}:{PORT}')
-    print('Responses password protected at /responses.html')
-    print('Responses login session stays active until logout or server restart')
+    print('Admin login available at /admin-login.html')
+    print('Admin session stays active until logout or server restart')
     print(f'Using SQLite database at {RESPONSES_DB_PATH}')
     server.serve_forever()

@@ -6,7 +6,9 @@ services:
     buildCommand: "python3 --version"
     startCommand: "python3 server.py"
     envVars:
-      - key: FOCUS_AI_RESPONSES_PASSWORD
+      - key: FOCUS_AI_ADMIN_USERNAME
+        value: "admin"
+      - key: FOCUS_AI_ADMIN_PASSWORD
         sync: false
       - key: FOCUS_AI_SECURE_COOKIES
         value: "1"

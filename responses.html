@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Responses — Focus-AI</title>
+<title>Admin Dashboard — Focus-AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="./styles.css"/>
 </head>
@@ -17,42 +17,66 @@
     <li><a href="./about.html">About</a></li>
     <li><a href="./feedback.html">Feedback</a></li>
   </ul>
-  <a class="nav-cta" href="./feedback.html">Get in Touch</a>
+  <form class="nav-cta-form" action="/admin-logout" method="POST">
+    <button class="nav-cta" type="submit">Logout</button>
+  </form>
 </nav>
 
 <main class="page">
   <div class="responses-wrap">
-    <div class="responses-header">
-      <div class="section-tag" style="display:flex;justify-content:center">Responses</div>
-      <div class="section-title" style="text-align:center">Saved user responses</div>
-    </div>
-    <div class="responses-toolbar">
-      <button class="btn-secondary responses-download" id="responses-download" type="button">Download CSV</button>
-      <form action="/responses-logout" method="POST"><button class="btn-secondary responses-logout" type="submit">Log Out</button></form>
-    </div>
-    <div class="responses-empty" id="responses-empty">No responses have been saved yet. Submit feedback from the Feedback page to populate this table.</div>
-    <div class="responses-table-wrap" id="responses-table-wrap">
-      <table class="responses-table" aria-label="Saved user responses">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>App</th>
-            <th>Type</th>
-            <th>Rating</th>
-            <th>Message</th>
-            <th>Submitted</th>
-          </tr>
-        </thead>
-        <tbody id="responses-list"></tbody>
-      </table>
+    <div class="admin-dashboard">
+      <aside class="admin-sidebar">
+        <div class="admin-sidebar-head">
+          <h1 class="admin-sidebar-title">Admin Dashboard</h1>
+          <p class="admin-sidebar-copy">Manage site feedback from one place.</p>
+        </div>
+        <div class="admin-sidebar-label">Admin Pages</div>
+        <div class="admin-nav-list" role="tablist" aria-label="Admin sections">
+          <button class="admin-nav-item active" id="admin-nav-responses" type="button" data-panel-target="responses-panel" aria-controls="responses-panel" aria-selected="true">
+            <span class="admin-nav-text">
+              <strong>User Responses</strong>
+              <small>Open saved feedback</small>
+            </span>
+          </button>
+        </div>
+      </aside>
+
+      <section class="admin-panel-wrap">
+        <section class="admin-panel active" id="responses-panel" role="tabpanel" aria-labelledby="admin-nav-responses">
+          <div class="responses-header">
+            <div class="admin-panel-eyebrow">User Responses</div>
+            <div class="section-title admin-panel-title">Saved feedback</div>
+            <div class="section-sub admin-panel-sub">Review feedback submitted from the website.</div>
+          </div>
+          <div class="responses-toolbar">
+            <button class="btn-secondary responses-download" id="responses-download" type="button">Download CSV</button>
+          </div>
+          <div class="responses-empty" id="responses-empty">No responses have been saved yet. Submit feedback from the Feedback page to populate this table.</div>
+          <div class="responses-table-wrap" id="responses-table-wrap">
+            <table class="responses-table" aria-label="Saved user responses">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>App</th>
+                  <th>Type</th>
+                  <th>Rating</th>
+                  <th>Message</th>
+                  <th>Submitted</th>
+                </tr>
+              </thead>
+              <tbody id="responses-list"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
     </div>
   </div>
 </main>
 
 <footer>
   <div><div class="footer-brand-name">Focus<span>AI</span></div><div class="footer-desc">Building AI-powered apps that help people focus, plan, and achieve their goals. Made with care in Delhi, India.</div></div>
-  <div><div class="footer-col-title">Pages</div><ul class="footer-links"><li><a href="./index.html">Home</a></li><li><a href="./apps.html">Apps</a></li><li><a href="./developer.html">Developer</a></li><li><a href="./about.html">About</a></li><li><a href="./feedback.html">Feedback</a></li><li><a class="footer-response-link" href="./responses.html">Responses</a></li><li><a href="./privacy-policy.html">Privacy Policy</a></li></ul></div>
+  <div><div class="footer-col-title">Pages</div><ul class="footer-links"><li><a href="./index.html">Home</a></li><li><a href="./apps.html">Apps</a></li><li><a href="./developer.html">Developer</a></li><li><a href="./about.html">About</a></li><li><a href="./feedback.html">Feedback</a></li><li><a href="./privacy-policy.html">Privacy Policy</a></li></ul></div>
   <div><div class="footer-col-title">Apps</div><ul class="footer-links"><li><a href="./apps.html">FocAI</a></li><li><a href="./feedback.html">Coming Soon</a></li></ul></div>
 </footer>
 <div class="footer-bottom"><div class="footer-copy">© 2026 Focus-AI · All rights reserved · Built by Puneet Sharma</div><div class="footer-copy">Made with ❤️ in Delhi, India</div></div>
