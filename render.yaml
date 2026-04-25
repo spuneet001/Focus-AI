@@ -12,9 +12,3 @@ services:
         sync: false
       - key: FOCUS_AI_SECURE_COOKIES
         value: "1"
-      - key: FOCUS_AI_DB_PATH
-        value: "/var/data/focus_ai.db"
-    disks:
-      - name: focus-ai-data
-        mountPath: /var/data
-        sizeGB: 1

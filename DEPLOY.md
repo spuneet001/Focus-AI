@@ -42,35 +42,15 @@ After deployment on Render:
 
 This app now stores responses in SQLite.
 
-By default it uses a stable SQLite file path.
-
-On local machines, the default is:
-
-```text
-~/.focus-ai/focus_ai.db
-```
-
-This keeps your data outside the project folder, so normal frontend/backend code changes do not affect your saved responses.
-
-In hosted environments, it uses whatever you set in `FOCUS_AI_DB_PATH`.
-
-Example old in-project location:
+By default it uses:
 
 ```text
 focus_ai.db
 ```
 
-For real hosting, put the database on persistent storage.
+On Render free plan, this file lives on ephemeral storage. That means feedback data can be lost on redeploy or restart.
 
-On Render, the recommended setup is:
-
-1. Add a persistent disk to the service.
-2. Mount it at `/var/data`.
-3. Add this environment variable:
-
-   - `FOCUS_AI_DB_PATH=/var/data/focus_ai.db`
-
-This ensures user feedback survives redeploys and restarts.
+If you later move to a paid plan with persistent disk support, you can point `FOCUS_AI_DB_PATH` to a mounted disk path.
 
 The app also migrates existing data from `responses-data.json` into SQLite automatically the first time the database is initialized.
 
@@ -88,7 +68,6 @@ With `.env` containing:
 FOCUS_AI_ADMIN_USERNAME=admin
 FOCUS_AI_ADMIN_PASSWORD=your-password
 FOCUS_AI_SECURE_COOKIES=0
-FOCUS_AI_DB_PATH=/absolute/path/to/your/stable/focus_ai.db
 ```
 
 `FOCUS_AI_RESPONSES_PASSWORD` is still accepted as a fallback for backward compatibility, but new deployments should use `FOCUS_AI_ADMIN_PASSWORD`.

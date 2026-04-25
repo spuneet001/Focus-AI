@@ -31,8 +31,7 @@ def load_dotenv_file() -> None:
 load_dotenv_file()
 
 RESPONSES_JSON_FILE = ROOT_DIR / 'responses-data.json'
-DEFAULT_LOCAL_DB_PATH = Path.home() / '.focus-ai' / 'focus_ai.db'
-RESPONSES_DB_PATH = Path(os.environ.get('FOCUS_AI_DB_PATH', str(DEFAULT_LOCAL_DB_PATH)))
+RESPONSES_DB_PATH = Path(os.environ.get('FOCUS_AI_DB_PATH', str(ROOT_DIR / 'focus_ai.db')))
 HOST = os.environ.get('HOST', '0.0.0.0')
 PORT = int(os.environ.get('PORT', '4173'))
 ADMIN_USERNAME = os.environ.get('FOCUS_AI_ADMIN_USERNAME', 'admin').strip() or 'admin'
